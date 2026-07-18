@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap");
+
+@import "tailwindcss";
+
+@import "tailwindcss";
+
+@theme {
+  /* Primary — azul da marca */
+  --color-primary-50:  #D7EDFF;
+  --color-primary-100: #C0E0FF;
+  --color-primary-200: #BEDBFF;
+  --color-primary-400: #2287FF;
+  --color-primary-500: #0282EA;
+  --color-primary-600: #1B5C9D;
+  --color-primary-800: #003366;
+  --color-primary-900: #062452;
+
+  /* Secondary — laranja */
+  --color-secondary-100: #FFD6A7;
+  --color-secondary-600: #F54900;
+  --color-secondary-800: #973C00;
+
+  /* Success — doação, confirmação */
+  --color-success-50:  #DCFCE7;
+  --color-success-200: #B9F8CF;
+  --color-success-700: #016630;
+
+  /* Warning — avisos, categorias */
+  --color-warning-50:  #FEF3C6;
+  --color-warning-200: #FEE685;
+  --color-warning-500: #F0B100;
+  --color-warning-600: #D08700;
+
+  /* Danger — erros */
+  --color-danger-100: #FFC0C2;
+
+  /* Neutros */
+  --color-ink:     #1A1A1A;
+  --color-muted:   #64748B;
+  --color-border:  #E5E7EB;
+  --color-surface: #F3F4F6;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: var(--color-ink);
+  background-color: white;
+}
