@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown, LogOut, User, Settings, LayoutDashboard} from "lucide-react";
- 
+import {
+  ChevronDown,
+  LogOut,
+  Package,
+  Settings,
+  User,
+} from "lucide-react";
 
 import { useAuth } from "../../hooks/useAuth";
 
@@ -12,6 +17,7 @@ export function UserMenu() {
   if (!user) return null;
 
   const firstName = user.name.split(" ")[0];
+
   const initials = user.name
     .split(" ")
     .slice(0, 2)
@@ -54,27 +60,27 @@ export function UserMenu() {
             </p>
           </div>
 
-          {/* Botão do perfil */}
+          {/* Perfil */}
           <Link
             to="/perfil"
             onClick={() => setIsOpen(false)}
             className="flex items-center gap-2 px-4 py-3 text-sm text-ink transition-colors hover:bg-primary-100"
           >
             <User className="h-4 w-4" />
-            Meu perfil
+            Meu Perfil
           </Link>
 
-          {/* Botão dos meus anuncios */}
+          {/* Meus anúncios */}
           <Link
-            to="/dashboard"
+            to="/meus-anuncios"
             onClick={() => setIsOpen(false)}
             className="flex items-center gap-2 px-4 py-3 text-sm text-ink transition-colors hover:bg-primary-100"
           >
-            <LayoutDashboard className="h-4 w-4"/>
-            Meus anúncios
+            <Package className="h-4 w-4" />
+            Meus Anúncios
           </Link>
 
-          {/*Botão de configurações*/}
+          {/* Configurações */}
           <Link
             to="/configuracoes"
             onClick={() => setIsOpen(false)}
@@ -84,10 +90,10 @@ export function UserMenu() {
             Configurações
           </Link>
 
-          {/* Botão de logout */}
+          {/* Logout */}
           <button
             onClick={handleLogout}
-            className="flex w-full items-center gap-2 border-t border-border px-4 py-3 text-left text-sm text-ink transition-colors hover:bg-red-400"
+            className="flex w-full items-center gap-2 border-t border-border px-4 py-3 text-left text-sm text-ink transition-colors hover:bg-red-50 hover:text-red-600"
           >
             <LogOut className="h-4 w-4" />
             Sair
