@@ -20,6 +20,9 @@ const buttonVariants = cva(
 
         destructive:
           "bg-danger-100 text-ink hover:opacity-90",
+
+        link:
+          "text-primary-100 underline-offset-4 hover:underline hover:text-white",
       },
 
       size: {
