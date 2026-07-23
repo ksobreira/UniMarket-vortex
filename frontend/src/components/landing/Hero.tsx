@@ -1,4 +1,3 @@
-// components/landing/Hero.tsx
 import { Link } from "react-router-dom";
 import { HeartHandshake, ListPlus, Search, ArrowRight } from "lucide-react";
 import { HeroSearch } from "./HeroSearch";
