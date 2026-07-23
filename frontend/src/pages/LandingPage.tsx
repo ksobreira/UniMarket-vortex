@@ -1,4 +1,3 @@
-// pages/LandingPage.tsx
 import { Hero } from "../components/landing/Hero";
 import { FeaturedListings } from "../components/landing/FeaturedListings";
 
