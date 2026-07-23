@@ -1,17 +1,8 @@
 
 import { Link } from "react-router-dom";
 import type { Listing } from "../../types/listing";
-
-const CATEGORY_LABELS: Record<Listing["category"], string> = {
-  BOOKS: "Livros",
-  STUDY_MATERIALS: "Material de Estudo",
-  ELECTRONICS: "Eletrônicos",
-  EQUIPMENT: "Equipamentos",
-  FURNITURE: "Móveis",
-  CLOTHING: "Roupas",
-  ACCESSORIES: "Acessórios",
-  OTHER: "Outros",
-};
+import { CATEGORY_LABELS } from "../../lib/categories";
+import { formatPrice } from "../../lib/formatPrice";
 
 export function ListingCard({ listing }: { listing: Listing }) {
   return (
@@ -39,10 +30,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
         </div>
         <h3 className="mb-1 line-clamp-1 text-sm font-bold text-ink">{listing.title}</h3>
         <p className="mb-3 line-clamp-2 text-xs text-muted">{listing.description}</p>
-        <p className="font-extrabold text-primary-800">
-          {listing.isDonation || !listing.price
-            ? "Gratuito"
-            : Number(listing.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+        <p className="font-extrabold text-primary-800">{formatPrice(listing)}
         </p>
       </div>
     </Link>
