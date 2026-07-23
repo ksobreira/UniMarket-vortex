@@ -1,4 +1,3 @@
-// data/mockListings.ts
 import type { Listing } from "../types/listing";
 
 export const mockListings: Listing[] = [
