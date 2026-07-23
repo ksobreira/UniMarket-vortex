@@ -1,21 +1,18 @@
+import { Routes, Route } from "react-router-dom";
 import { Navbar } from "./components/layout/Navbar";
-import {Footer} from './components/layout/Footer'
+import { Footer } from "./components/layout/Footer";
+import { LandingPage } from "./pages/LandingPage";
 
-function App() {
+export default function App() {
   return (
-    <>
+    <div>
       <Navbar />
-
       <main className="pt-16">
-        <h1>UniMarket</h1>
-        
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+        </Routes>
       </main>
-
-      
-      <Footer/>
-    </>
-    
+      <Footer />
+    </div>
   );
 }
-
-export default App;
