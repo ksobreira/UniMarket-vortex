@@ -10,3 +10,11 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   ACCESSORIES: "Acessórios",
   OTHER: "Outros",
 };
+
+export const CATEGORY_FILTERS: { value: Category | "ALL"; label: string }[] = [
+  { value: "ALL", label: "Todos" },
+  ...(Object.entries(CATEGORY_LABELS) as [Category, string][]).map(([value, label]) => ({
+    value,
+    label,
+  })),
+];

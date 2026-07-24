@@ -3,15 +3,7 @@ import { Link } from "react-router-dom";
 import { ListingCard } from "../listings/ListingCard";
 import { mockListings } from "../../data/mockListings";
 import type { Category } from "../../types/listing";
-
-const CATEGORIES: { value: Category | "ALL"; label: string }[] = [
-  { value: "ALL", label: "Todos" },
-  { value: "BOOKS", label: "Livros" },
-  { value: "ELECTRONICS", label: "Eletrônicos" },
-  { value: "CLOTHING", label: "Roupas" },
-  { value: "FURNITURE", label: "Móveis" },
-  { value: "OTHER", label: "Outros" },
-];
+import { CATEGORY_FILTERS } from "../../lib/categories";
 
 export function FeaturedListings() {
   const [activeCategory, setActiveCategory] = useState<Category | "ALL">("ALL");
@@ -34,7 +26,7 @@ export function FeaturedListings() {
       </div>
 
       <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
-        {CATEGORIES.map(({ value, label }) => (
+        {CATEGORY_FILTERS.map(({ value, label }) => (
           <button
             key={value}
             onClick={() => setActiveCategory(value)}
