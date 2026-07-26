@@ -4,6 +4,7 @@ import { Footer } from "./components/layout/Footer";
 import { LandingPage } from "./pages/LandingPage";
 import { MarketplacePage } from "./pages/MarketplacePage";
 import {ListingDetailPage} from "./pages/ListingDetailPage"
+import { CreateListingPage } from "./pages/CreateListingPAge"
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/explorar" element={<MarketplacePage />} />
           <Route path="/anuncios/:id" element={<ListingDetailPage />} />
+          <Route path="/anuncios/novo" element={<CreateListingPage />} />
         </Routes>
       </main>
       <Footer />
