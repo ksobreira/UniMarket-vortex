@@ -1,24 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ListingCard } from "../components/listings/ListingCard";
-import { mockListings } from "../data/mockListings";
-import type { Category } from "../types/listing";
-
-const CATEGORIES: { value: Category | "ALL"; label: string }[] = [
-  { value: "ALL", label: "Todos" },
-  { value: "BOOKS", label: "Livros" },
-  { value: "ELECTRONICS", label: "Eletrônicos" },
-  { value: "CLOTHING", label: "Roupas" },
-  { value: "FURNITURE", label: "Móveis" },
-  { value: "OTHER", label: "Outros" },
-];
+import { ListingsService } from "../services/listing.service";
+import { CATEGORY_FILTERS } from "../lib/categories";
+import type { Category, Listing } from "../types/listing";
 
 export function MarketplacePage() {
   const [searchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const [activeCategory, setActiveCategory] = useState<Category | "ALL">("ALL");
 
-  const filtered = mockListings.filter((listing) => {
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function load() {
+      setLoading(true);
+      const result = await ListingsService.getAll();
+      setLoading(false);
+      if (!result.success) {
+        setError(result.error);
+        return;
+      }
+      setListings(result.data);
+    }
+    load();
+  }, []);
+
+  const filtered = listings.filter((listing) => {
     const matchesSearch = listing.title.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = activeCategory === "ALL" || listing.category === activeCategory;
     return matchesSearch && matchesCategory;
@@ -37,7 +47,7 @@ export function MarketplacePage() {
       />
 
       <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
-        {CATEGORIES.map(({ value, label }) => (
+        {CATEGORY_FILTERS.map(({ value, label }) => (
           <button
             key={value}
             onClick={() => setActiveCategory(value)}
@@ -50,14 +60,21 @@ export function MarketplacePage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
-        {filtered.map((listing) => (
-          <ListingCard key={listing.id} listing={listing} />
-        ))}
-      </div>
+      {loading && <p className="text-center text-muted py-12">Carregando anúncios...</p>}
+      {error && <p className="text-center text-red-600 py-12">{error}</p>}
 
-      {filtered.length === 0 && (
-        <p className="py-12 text-center text-muted">Nenhum anúncio encontrado.</p>
+      {!loading && !error && (
+        <>
+          <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
+            {filtered.map((listing) => (
+              <ListingCard key={listing.id} listing={listing} />
+            ))}
+          </div>
+
+          {filtered.length === 0 && (
+            <p className="py-12 text-center text-muted">Nenhum anúncio encontrado.</p>
+          )}
+        </>
       )}
     </div>
   );
