@@ -1,4 +1,3 @@
-// services/auth.service.ts
 import type { LoginInput, LoginResponse, RegisterInput } from "../types/auth";
 import type { ApiResult } from "../types/api";
 import type { User } from "../types/user";

@@ -1,4 +1,3 @@
-// services/listings.service.ts
 import type { Listing, CreateListingInput, UpdateListingInput, Category } from "../types/listing";
 import type { ApiResult } from "../types/api";
 
