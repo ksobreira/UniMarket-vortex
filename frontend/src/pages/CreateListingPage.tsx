@@ -1,16 +1,18 @@
-// pages/CreateListingPage.tsx
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { ImagePlus, HandCoins, Gift } from "lucide-react";
-import { ListingsService } from "../services/listing.service";
+import { ListingsService } from "../services//listing.service";
 import { CATEGORY_FILTERS, CATEGORY_LABELS } from "../lib/categories";
-import { FormField } from "../components/forms/FormFIeld";
+import { FormField } from "../components/forms/FormFieldTemp";
 import { ListingCard } from "../components/listings/ListingCard";
 import { Button } from "../components/ui/Button";
 import { useAuth } from "../hooks/useAuth";
 import type { Category, Listing } from "../types/listing";
 
 export function CreateListingPage() {
+  const { id } = useParams<{ id: string }>();
+  const isEditMode = Boolean(id);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -19,9 +21,32 @@ export function CreateListingPage() {
   const [category, setCategory] = useState<Category | "">("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingListing, setLoadingListing] = useState(isEditMode);
 
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!id) return;
+
+    async function loadListing() {
+      const result = await ListingsService.getById(id!);
+      setLoadingListing(false);
+      if (!result.success) {
+        setError(result.error);
+        return;
+      }
+      const listing = result.data;
+      setTitle(listing.title);
+      setDescription(listing.description);
+      setPrice(listing.price ?? "");
+      setIsDonation(listing.isDonation);
+      setImageUrl(listing.imageUrl);
+      setCategory(listing.category);
+    }
+
+    loadListing();
+  }, [id]);
 
   const previewListing: Listing = {
     id: "preview",
@@ -47,14 +72,20 @@ export function CreateListingPage() {
     }
 
     setLoading(true);
-    const result = await ListingsService.create({
+
+    const payload = {
       title,
       description,
       price: isDonation ? undefined : Number(price),
       isDonation,
       imageUrl,
       category,
-    });
+    };
+
+    const result = isEditMode
+      ? await ListingsService.update(id!, payload)
+      : await ListingsService.create(payload);
+
     setLoading(false);
 
     if (!result.success) {
@@ -65,13 +96,18 @@ export function CreateListingPage() {
     navigate(`/anuncios/${result.data.id}`);
   }
 
+  if (loadingListing) {
+    return <div className="max-w-5xl mx-auto px-6 py-24 text-center text-muted">Carregando anúncio...</div>;
+  }
+
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
-      <h1 className="text-2xl font-extrabold text-ink mb-1">Publicar Anúncio</h1>
+      <h1 className="text-2xl font-extrabold text-ink mb-1">
+        {isEditMode ? "Editar Anúncio" : "Publicar Anúncio"}
+      </h1>
       <p className="text-sm text-muted mb-8">Preencha os dados — a prévia ao lado atualiza em tempo real.</p>
 
       <div className="grid md:grid-cols-[1.2fr_1fr] gap-8">
-        {/* formulário */}
         <form onSubmit={handleSubmit} className="bg-white border border-border rounded-2xl p-6 space-y-5">
           <FormField id="title" label="Título" value={title} onChange={setTitle} required />
 
@@ -87,7 +123,6 @@ export function CreateListingPage() {
             />
           </div>
 
-          {/* categoria como pills, mesmo padrão da Marketplace */}
           <div className="space-y-1.5">
             <p className="text-sm font-medium text-ink">Categoria</p>
             <div className="flex flex-wrap gap-2">
@@ -121,7 +156,6 @@ export function CreateListingPage() {
             />
           </div>
 
-          {/* toggle venda / doação */}
           <div className="space-y-1.5">
             <p className="text-sm font-medium text-ink">Tipo de anúncio</p>
             <div className="grid grid-cols-2 gap-2">
@@ -155,11 +189,10 @@ export function CreateListingPage() {
           {error && <p className="text-sm text-red-600">{error}</p>}
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Publicando..." : "Publicar Anúncio"}
+            {loading ? "Salvando..." : isEditMode ? "Salvar Alterações" : "Publicar Anúncio"}
           </Button>
         </form>
 
-        {/* preview ao vivo */}
         <div>
           <p className="text-xs font-bold text-muted mb-3 uppercase tracking-wide">Prévia</p>
           <div className="pointer-events-none">
