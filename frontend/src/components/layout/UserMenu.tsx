@@ -4,8 +4,6 @@ import {
   ChevronDown,
   LogOut,
   Package,
-  Settings,
-  User,
 } from "lucide-react";
 
 import { useAuth } from "../../hooks/useAuth";
@@ -60,15 +58,6 @@ export function UserMenu() {
             </p>
           </div>
 
-          {/* Perfil */}
-          <Link
-            to="/perfil"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-2 px-4 py-3 text-sm text-ink transition-colors hover:bg-primary-100"
-          >
-            <User className="h-4 w-4" />
-            Meu Perfil
-          </Link>
 
           {/* Meus anúncios */}
           <Link
@@ -78,16 +67,6 @@ export function UserMenu() {
           >
             <Package className="h-4 w-4" />
             Meus Anúncios
-          </Link>
-
-          {/* Configurações */}
-          <Link
-            to="/configuracoes"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-2 px-4 py-3 text-sm text-ink transition-colors hover:bg-primary-100"
-          >
-            <Settings className="h-4 w-4" />
-            Configurações
           </Link>
 
           {/* Logout */}
