@@ -70,7 +70,7 @@ export function AuthPage() {
           alt="Campus da Universidade de Fortaleza"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary-900 via-primary-900/90 to-primary-900/60" />
+        <div className="absolute inset-0 bg-gradient-to- from-primary-900 via-primary-900/90 to-primary-900/60" />
 
         <div className="relative">
           <Link to="/" className="flex items-center gap-2 mb-10">
