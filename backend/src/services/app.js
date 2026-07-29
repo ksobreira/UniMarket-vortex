@@ -5,10 +5,11 @@ import listingRoutes from '../routes/listingRoutes.js'
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
-app.get('/', (req,res) => {
-    res.json({message: "API UniMarket funcionando!" })
+app.get('/', (req, res) => {
+    res.json({ message: "API UniMarket funcionando!" })
 })
 
 app.use('/users', userRoutes)
