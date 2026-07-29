@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Compass, Info, Menu, Package,Plus, X} from "lucide-react";
+import { Compass, Menu, Package, Plus, X } from "lucide-react";
 
 import { useAuth } from "../../hooks/useAuth";
 
@@ -16,8 +16,6 @@ const navLinkClass = (isActive: boolean) => {
     : "rounded-xl px-4 py-2 text-sm font-medium transition-colors text-muted hover:bg-primary-50 hover:text-primary-800";
 };
 
-const secondaryNavButtonClass =
-  "rounded-xl px-4 py-2 text-sm font-medium text-muted transition-colors hover:bg-primary-50 hover:text-primary-800";
 
 export function Navbar() {
   const { user } = useAuth();
@@ -40,17 +38,6 @@ export function Navbar() {
             </span>
           </NavLink>
 
-          {!user && (
-            <button
-              type="button"
-              className={secondaryNavButtonClass}
-            >
-              <span className="flex items-center gap-2">
-                <Info className="h-4 w-4" />
-                Como Funciona
-              </span>
-            </button>
-          )}
 
           {user && (
             <NavLink
@@ -66,7 +53,7 @@ export function Navbar() {
         </nav>
 
         {/* Ações Desktop */}
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-3 md:flex">
           {user ? (
             <>
               <Link to="/anuncios/novo">
@@ -80,15 +67,15 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Link to="/entrar">
-                <Button variant="ghost" size="sm">
-                  Entrar
+              <Link to="/cadastro">
+                <Button variant="outline" size="sm">
+                  Criar conta
                 </Button>
               </Link>
 
-              <Link to="/cadastro">
+              <Link to="/entrar">
                 <Button size="sm">
-                  Criar Conta
+                  Entrar
                 </Button>
               </Link>
             </>

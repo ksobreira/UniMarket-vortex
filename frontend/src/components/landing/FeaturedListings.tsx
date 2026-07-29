@@ -1,17 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ListingCard } from "../listings/ListingCard";
-import { mockListings } from "../../data/mockListings";
-import type { Category } from "../../types/listing";
+import { ListingsService } from "../../services/listing.service";
 import { CATEGORY_FILTERS } from "../../lib/categories";
+import type { Category, Listing } from "../../types/listing";
 
 export function FeaturedListings() {
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [activeCategory, setActiveCategory] = useState<Category | "ALL">("ALL");
 
-  const filtered =
-    activeCategory === "ALL"
-      ? mockListings
-      : mockListings.filter((l) => l.category === activeCategory);
+  useEffect(() => {
+    async function load() {
+      setLoading(true);
+      const result = await ListingsService.getAll();
+      setLoading(false);
+      if (!result.success) {
+        setError(result.error);
+        return;
+      }
+      setListings(result.data);
+    }
+    load();
+  }, []);
+
+  const filtered = (
+    activeCategory === "ALL" ? listings : listings.filter((l) => l.category === activeCategory)
+  ).slice(0, 8);
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
@@ -39,14 +55,21 @@ export function FeaturedListings() {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
-        {filtered.map((listing) => (
-          <ListingCard key={listing.id} listing={listing} />
-        ))}
-      </div>
+      {loading && <p className="text-center text-muted py-12">Carregando anúncios...</p>}
+      {error && <p className="text-center text-red-600 py-12">{error}</p>}
 
-      {filtered.length === 0 && (
-        <p className="py-12 text-center text-muted">Nenhum anúncio nessa categoria ainda.</p>
+      {!loading && !error && (
+        <>
+          <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
+            {filtered.map((listing) => (
+              <ListingCard key={listing.id} listing={listing} />
+            ))}
+          </div>
+
+          {filtered.length === 0 && (
+            <p className="py-12 text-center text-muted">Nenhum anúncio nessa categoria ainda.</p>
+          )}
+        </>
       )}
     </section>
   );

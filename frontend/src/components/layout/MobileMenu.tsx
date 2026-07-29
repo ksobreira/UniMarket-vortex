@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import { Compass, Info, LogOut, Package, Plus, Settings, User } from "lucide-react";
+import { Compass, Info, LogOut, Package, Plus } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
 import { useAuth } from "../../hooks/useAuth";
@@ -16,10 +16,7 @@ const navLinkClass = (isActive: boolean) => {
     : "rounded-xl px-4 py-2 text-sm font-medium transition-colors text-muted hover:bg-primary-50 hover:text-primary-800";
 };
 
-export function MobileMenu({
-  isOpen,
-  onClose,
-}: MobileMenuProps) {
+export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { user, logout } = useAuth();
 
   const handleLogout = () => {
@@ -44,27 +41,15 @@ export function MobileMenu({
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-800 text-sm font-bold text-white">
                     {user.name.slice(0, 2).toUpperCase()}
                   </div>
-
                   <div>
-                    <p className="font-semibold text-ink">
-                      {user.name}
-                    </p>
-
-                    <p className="text-sm text-muted">
-                      {user.email}
-                    </p>
+                    <p className="font-semibold text-ink">{user.name}</p>
+                    <p className="text-sm text-muted">{user.email}</p>
                   </div>
                 </div>
               </div>
             )}
 
-            <NavLink
-              to="/explorar"
-              className={({ isActive }) =>
-                navLinkClass(isActive)
-              }
-              onClick={onClose}
-            >
+            <NavLink to="/explorar" className={({ isActive }) => navLinkClass(isActive)} onClick={onClose}>
               <span className="flex items-center gap-2">
                 <Compass className="h-4 w-4" />
                 Explorar
@@ -72,106 +57,44 @@ export function MobileMenu({
             </NavLink>
 
             {!user && (
-              <NavLink
-                to="/como-funciona"
-                className={({ isActive }) =>
-                  navLinkClass(isActive)
-                }
-                onClick={onClose}
-              >
+              <a href="/#como-funciona" className={navLinkClass(false)} onClick={onClose}>
                 <span className="flex items-center gap-2">
                   <Info className="h-4 w-4" />
                   Como Funciona
                 </span>
-              </NavLink>
+              </a>
             )}
 
             {user && (
-              <>
-                <NavLink
-                  to="/meus-anuncios"
-                  className={({ isActive }) =>
-                    navLinkClass(isActive)
-                  }
-                  onClick={onClose}
-                >
-                  <span className="flex items-center gap-2">
-                    <Package className="h-4 w-4" />
-                    Meus Anúncios
-                  </span>
-                </NavLink>
-
-                <NavLink
-                  to="/perfil"
-                  className={({ isActive }) =>
-                    navLinkClass(isActive)
-                  }
-                  onClick={onClose}
-                >
-                  <span className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    Meu Perfil
-                  </span>
-                </NavLink>
-
-                <NavLink
-                  to="/configuracoes"
-                  className={({ isActive }) =>
-                    navLinkClass(isActive)
-                  }
-                  onClick={onClose}
-                >
-                  <span className="flex items-center gap-2">
-                    <Settings className="h-4 w-4" />
-                    Configurações
-                  </span>
-                </NavLink>
-              </>
+              <NavLink to="/meus-anuncios" className={({ isActive }) => navLinkClass(isActive)} onClick={onClose}>
+                <span className="flex items-center gap-2">
+                  <Package className="h-4 w-4" />
+                  Meus Anúncios
+                </span>
+              </NavLink>
             )}
 
             <div className="mt-2 border-t border-border pt-3">
               {user ? (
                 <div className="flex flex-col gap-2">
-                  <Link
-                    to="/anuncios/novo"
-                    onClick={onClose}
-                  >
+                  <Link to="/anuncios/novo" onClick={onClose}>
                     <Button className="w-full">
                       <Plus className="h-4 w-4" />
                       Publicar Anúncio
                     </Button>
                   </Link>
-
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={handleLogout}
-                  >
+                  <Button variant="outline" className="w-full" onClick={handleLogout}>
                     <LogOut className="h-4 w-4" />
                     Sair
                   </Button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
-                  <Link
-                    to="/entrar"
-                    onClick={onClose}
-                  >
-                    <Button
-                      variant="outline"
-                      className="w-full"
-                    >
-                      Entrar
-                    </Button>
+                  <Link to="/entrar" onClick={onClose}>
+                    <Button variant="outline" className="w-full">Entrar</Button>
                   </Link>
-
-                  <Link
-                    to="/cadastro"
-                    onClick={onClose}
-                  >
-                    <Button className="w-full">
-                      Criar Conta
-                    </Button>
+                  <Link to="/cadastro" onClick={onClose}>
+                    <Button className="w-full">Criar Conta</Button>
                   </Link>
                 </div>
               )}
