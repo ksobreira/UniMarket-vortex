@@ -1,19 +1,42 @@
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Pencil, Trash2, Clock, MessageCircleOff } from "lucide-react";
-import { mockListings } from "../data/mockListings";
+import { ListingsService } from "../services/listing.service";
 import { CATEGORY_LABELS } from "../lib/categories";
 import { formatPrice } from "../lib/formatPrice";
 import { formatRelativeDate } from "../lib/formatRelativeDate";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "../components/ui/Button";
+import type { Listing } from "../types/listing";
 
 export function ListingDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
 
-  const listing = mockListings.find((l) => l.id === id);
+  const [listing, setListing] = useState<Listing | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  if (!listing) {
+  useEffect(() => {
+    async function load() {
+      if (!id) return;
+      setLoading(true);
+      const result = await ListingsService.getById(id);
+      setLoading(false);
+      if (!result.success) {
+        setError(result.error);
+        return;
+      }
+      setListing(result.data);
+    }
+    load();
+  }, [id]);
+
+  if (loading) {
+    return <div className="max-w-5xl mx-auto px-6 py-24 text-center text-muted">Carregando anúncio...</div>;
+  }
+
+  if (error || !listing) {
     return (
       <div className="max-w-2xl mx-auto px-6 py-24 text-center">
         <p className="text-lg font-bold text-ink mb-2">Anúncio não encontrado</p>
@@ -40,14 +63,9 @@ export function ListingDetailPage() {
       </Link>
 
       <div className="grid md:grid-cols-2 gap-8">
-        {/* coluna esquerda: imagem + descrição */}
         <div className="space-y-6">
           <div className="aspect-square rounded-2xl overflow-hidden bg-surface">
-            <img
-              src={listing.imageUrl}
-              alt={listing.title}
-              className="w-full h-full object-cover"
-            />
+            <img src={listing.imageUrl} alt={listing.title} className="w-full h-full object-cover" />
           </div>
 
           <div className="bg-white border border-border rounded-2xl p-6">
@@ -56,7 +74,6 @@ export function ListingDetailPage() {
           </div>
         </div>
 
-        {/* coluna direita: info + ações */}
         <div className="space-y-6">
           <div>
             <div className="flex items-center gap-2 mb-3">
@@ -68,13 +85,9 @@ export function ListingDetailPage() {
               </span>
             </div>
 
-            <h1 className="text-2xl md:text-3xl font-extrabold text-ink mb-2">
-              {listing.title}
-            </h1>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-ink mb-2">{listing.title}</h1>
 
-            <p className="text-2xl font-extrabold text-primary-800 mb-2">
-              {formatPrice(listing)}
-            </p>
+            <p className="text-2xl font-extrabold text-primary-800 mb-2">{formatPrice(listing)}</p>
 
             <p className="flex items-center gap-1.5 text-xs text-muted">
               <Clock className="w-3.5 h-3.5" />
