@@ -1,51 +1,36 @@
-import {
-  createContext,
-  useState,
-  type ReactNode,
-} from "react";
-
+import { createContext, useState, type ReactNode } from "react";
 import type { User } from "../types/user";
 
-interface AuthContextData {
-  user: User | null;
-  login: (user: User) => void;
+type AuthUser = Pick<User, "id" | "name" | "email">;
+
+interface AuthContextValue {
+  user: AuthUser | null;
+  login: (user: AuthUser, token: string) => void;
   logout: () => void;
 }
 
-export const AuthContext =
-  createContext<AuthContextData | null>(null);
+export const AuthContext = createContext<AuthContextValue | null>(null);
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<AuthUser | null>(() => {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  });
 
-export function AuthProvider({
-  children,
-}: AuthProviderProps) {
-const [user, setUser] = useState<User | null>({
-  id: "1",
-  name: "Kauam Morais",
-  email: "kauam@email.com",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-});
-
-  const login = (user: User) => {
+  function login(user: AuthUser, token: string) {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
     setUser(user);
-  };
+  }
 
-  const logout = () => {
+  function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
-  };
+  }
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
