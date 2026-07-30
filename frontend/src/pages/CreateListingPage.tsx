@@ -1,7 +1,8 @@
+// pages/CreateListingPage.tsx
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ImagePlus, HandCoins, Gift } from "lucide-react";
-import { ListingsService } from "../services//listing.service";
+import { ListingsService } from "../services/listing.service";
 import { CATEGORY_FILTERS, CATEGORY_LABELS } from "../lib/categories";
 import { FormField } from "../components/forms/FormField";
 import { ListingCard } from "../components/listings/ListingCard";
@@ -20,6 +21,7 @@ export function CreateListingPage() {
   const [imageUrl, setImageUrl] = useState("");
   const [category, setCategory] = useState<Category | "">("");
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [loadingListing, setLoadingListing] = useState(isEditMode);
 
@@ -65,6 +67,7 @@ export function CreateListingPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
 
     if (!category) {
       setError("Selecione uma categoria");
@@ -90,6 +93,7 @@ export function CreateListingPage() {
 
     if (!result.success) {
       setError(result.error);
+      setFieldErrors(result.fieldErrors ?? {});
       return;
     }
 
@@ -109,7 +113,14 @@ export function CreateListingPage() {
 
       <div className="grid md:grid-cols-[1.2fr_1fr] gap-8">
         <form onSubmit={handleSubmit} className="bg-white border border-border rounded-2xl p-6 space-y-5">
-          <FormField id="title" label="Título" value={title} onChange={setTitle} required />
+          <FormField
+            id="title"
+            label="Título"
+            value={title}
+            onChange={setTitle}
+            required
+            error={fieldErrors.title}
+          />
 
           <div className="space-y-1.5">
             <label htmlFor="description" className="text-sm font-medium text-ink">Descrição</label>
@@ -119,8 +130,11 @@ export function CreateListingPage() {
               onChange={(e) => setDescription(e.target.value)}
               required
               rows={4}
-              className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary-500"
+              className={`w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors ${
+                fieldErrors.description ? "border-red-400 focus:border-red-500" : "border-border focus:border-primary-500"
+              }`}
             />
+            {fieldErrors.description && <p className="text-xs text-red-600">{fieldErrors.description}</p>}
           </div>
 
           <div className="space-y-1.5">
@@ -152,8 +166,11 @@ export function CreateListingPage() {
               onChange={(e) => setImageUrl(e.target.value)}
               required
               placeholder="https://..."
-              className="w-full rounded-lg border border-border px-3 py-2 text-sm outline-none focus:border-primary-500"
+              className={`w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors ${
+                fieldErrors.imageUrl ? "border-red-400 focus:border-red-500" : "border-border focus:border-primary-500"
+              }`}
             />
+            {fieldErrors.imageUrl && <p className="text-xs text-red-600">{fieldErrors.imageUrl}</p>}
           </div>
 
           <div className="space-y-1.5">
@@ -183,10 +200,18 @@ export function CreateListingPage() {
           </div>
 
           {!isDonation && (
-            <FormField id="price" label="Preço (R$)" type="number" value={price} onChange={setPrice} required />
+            <FormField
+              id="price"
+              label="Preço (R$)"
+              type="number"
+              value={price}
+              onChange={setPrice}
+              required
+              error={fieldErrors.price}
+            />
           )}
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>}
 
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Salvando..." : isEditMode ? "Salvar Alterações" : "Publicar Anúncio"}

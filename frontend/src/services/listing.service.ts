@@ -40,7 +40,12 @@ export const ListingsService = {
         body: JSON.stringify(input),
       });
       const data = await res.json();
-      if (!res.ok) return { success: false, data: null, error: data.message || "Erro ao criar anúncio" };
+      if (!res.ok) {
+        const fieldErrors = data.issues
+          ? Object.fromEntries(data.issues.map((i: { campo: string; erro: string }) => [i.campo, i.erro]))
+          : undefined;
+        return { success: false, data: null, error: data.message || "Erro ao criar anúncio", fieldErrors };
+      }
       return { success: true, data, error: null };
     } catch {
       return { success: false, data: null, error: "Erro de conexão com o servidor" };
@@ -55,7 +60,12 @@ export const ListingsService = {
         body: JSON.stringify(input),
       });
       const data = await res.json();
-      if (!res.ok) return { success: false, data: null, error: data.message || "Erro ao atualizar anúncio" };
+      if (!res.ok) {
+        const fieldErrors = data.issues
+          ? Object.fromEntries(data.issues.map((i: { campo: string; erro: string }) => [i.campo, i.erro]))
+          : undefined;
+        return { success: false, data: null, error: data.message || "Erro ao atualizar anúncio", fieldErrors };
+      }
       return { success: true, data, error: null };
     } catch {
       return { success: false, data: null, error: "Erro de conexão com o servidor" };
