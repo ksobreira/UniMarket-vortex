@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ImagePlus, HandCoins, Gift } from "lucide-react";
 import { ListingsService } from "../services//listing.service";
 import { CATEGORY_FILTERS, CATEGORY_LABELS } from "../lib/categories";
-import { FormField } from "../components/forms/FormFieldTemp";
+import { FormField } from "../components/forms/FormField";
 import { ListingCard } from "../components/listings/ListingCard";
 import { Button } from "../components/ui/Button";
 import { useAuth } from "../hooks/useAuth";
