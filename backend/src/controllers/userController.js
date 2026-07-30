@@ -1,12 +1,21 @@
 import bycript from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { prisma } from '../lib/prisma.js'
+import { registerSchema } from '../schemas/user.schema.js'
 
 const saltRounds = 10
 
 export const register = async (req, res) => {
     try {
-        const { name, email, password, avatar } = req.body
+        const parsed = registerSchema.safeParse(req.body);
+        if (!parsed.success) {
+            return res.status(400).json({
+                message: "Dados inválidos",
+                issues: parsed.error.issues.map((i) => ({ campo: i.path[0], erro: i.message })),
+            });
+        }
+
+        const { name, email, password, avatar } = parsed.data;
 
         const existingUser = await prisma.user.findUnique({ where: { email } })
 
